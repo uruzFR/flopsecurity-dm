@@ -1,8 +1,8 @@
 # Devoir Maison : Audit de Sécurité de l'Application Flop-Security
 
 Les scripts développés pour l'exploitation des failles sont présents dans ce dépôt :
--   **`BruteForce/bruteforce.go`** : Un outil en ligne de commande développé en Go pour réaliser une attaque par force brute sur le formulaire de connexion.
--   **`Selenium/attack-automatiser.py`** : Un script Python utilisant Selenium pour automatiser une attaque en chaîne : connexion par injection SQL, puis injection d'un code XSS dans la section des commentaires.
+-   **`BruteForce/bruteforce.go`** : Un outil en ligne de commande développé en Go pour faire une attaque par force brute sur la page de connexion.
+-   **`Selenium/attack-automatiser.py`** : Un script Python qui utilise Selenium pour automatiser une attaque en chaîne : connexion par injection SQL, puis injection d'un code XSS dans la section des commentaires.
 
 ---
 
@@ -11,7 +11,7 @@ Les scripts développés pour l'exploitation des failles sont présents dans ce 
 ### Description détaillée
 L'injection SQL est une attaque qui consiste à insérer des commandes SQL malveillantes dans les requêtes envoyées par une application à sa base de données. L'application `flopsecurity` s'est révélée vulnérable via son formulaire de connexion.
 
-En fournissant le payload suivant dans le champ `email`, il a été possible de contourner l'authentification :
+En entarnt le champ `email` par ceci, il a été possible de contourner l'authentification :
 ```sql
 " OR "1"="1" #
 ````
@@ -27,7 +27,7 @@ Cette entrée modifie la requête SQL exécutée par le serveur pour qu'elle soi
 
 ### Sécurisation
 
-1.  **Requêtes Préparées (Prepared Statements) :** C'est la défense la plus efficace. Il faut séparer les commandes SQL des données fournies par l'utilisateur pour que ces dernières ne soient jamais interprétées comme du code. En PHP, cela se fait via PDO ou MySQLi.
+1.  **Requêtes Préparées :** C'est la défense la plus efficace. Il faut séparer les commandes SQL des données fournies par l'utilisateur pour que ces dernières ne soient jamais interprétées comme du code. En PHP, cela se fait via PDO ou MySQLi.
 2.  **Principe du Moindre Privilège :** La stratégie de la base de données du TP est un bon exemple. L'utilisateur applicatif `flopsecurity` n'a de droits que sur sa propre base, limitant l'impact en cas de compromission.
 3.  **Validation des Données :** Toujours vérifier et nettoyer les entrées utilisateur pour s'assurer qu'elles correspondent au format attendu.
 
@@ -37,7 +37,7 @@ Cette entrée modifie la requête SQL exécutée par le serveur pour qu'elle soi
 
 ### Description détaillée
 
-L'attaque XSS consiste à injecter un script côté client (généralement du JavaScript) dans une page web, qui sera ensuite exécuté par les navigateurs des autres utilisateurs. Dans ce TP, une faille **XSS stockée** a été exploitée.
+L'attaque XSS consiste à injecter un script côté client dans une page web, qui sera ensuite exécuté par les navigateurs des autres utilisateurs. Dans ce TP, une faille **XSS stockée** a été exploitée.
 
 Le script `Selenium/attack-automatiser.py` injecte le payload suivant dans la section des commentaires :
 
